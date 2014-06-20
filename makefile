@@ -14,11 +14,11 @@ WORKSTATION = UNIX
 # C_OBJS	contain common object-files. Object files should be named after the soruce
 #		files but have .o - extention.
 
-CXX = g++
+CXX = g++ -g
 TARGET = main.out
 TESTTARGET = test.out
 C_WFLAGS = -Wall -Wsign-compare 
-C_OBJS = main.o
+C_OBJS = main.o ShaderTools.o
 
 # == System Specific flags == #
 # Objs 		are to be named the same as the source-files except for .o - extention
@@ -33,7 +33,7 @@ WFLAGS = $(C_WFLAGS)
 #INCLUDEFLAGS = `pkg-config --cflags gtk+-2.0`
 #LINKFLAGS = -export-dynamic -lm -lXext -lX11 `pkg-config --libs gtk+-2.0` -lGL -lGLEW -lGLU -lglut
 INCLUDEFLAGS =
-LINKFLAGS = -export-dynamic -lglfw3 -lGLU -lGL -lX11 -lpthread -lXi -lXrandr -lXcursor -lXxf86vm 
+LINKFLAGS = -export-dynamic -lglfw3 -lGLU -lGL -lGLEW -lX11 -lpthread -lXi -lXrandr -lXcursor -lXxf86vm 
 
 endif
 
@@ -66,7 +66,7 @@ rebuild: clean all
 
 # Build target
 $(TARGET):  $(OBJS)	
-	$(CXX) $(OBJS) -o $(TARGET) $(TARGETFLAGS)
+	$(CXX)  $(OBJS) $(TARGETFLAGS) -o $(TARGET) 
 
 # Build object files
 %.o: %.cpp

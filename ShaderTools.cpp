@@ -1,155 +1,131 @@
-#include "CommonHeaders.h"
-#include "ShaderTools.h"
-// Reads the content of a .glsl shader file and saves its content into an allocated buffert.
-char* readShaderSource(const char* shaderFile)
-{
-	// Open the file
-	FILE* fp = fopen(shaderFile, "r");
-	long size;
-	char* buf;
+#include"ShaderTools.h"
 
-	if( fp == NULL )
-	{
-		fprintf(stderr, "fopen failed in readShaderSource()");
-		return NULL;
-	}
-
-	// Sett the filepointer to EOF
-	fseek(fp, 0L, SEEK_END);
-	// Gets size in bytes of the file
-	size = ftell(fp);
-
-	// Returns the fp to the beginning of file
-	fseek(fp, 0L, SEEK_SET);
-	// Allocate memory for the file
-	errno = 0;
-	buf = (char*)malloc((size+1));
-	if(buf == NULL)
-	{
-		fprintf(stderr, "ERROR, malloc failed in readShaderSource()");
-		if(errno!=0)
-		{
-			fprintf(stderr, " with errno message:\n %s", strerror(errno));
-		}
-		fprintf(stderr, "\n");
-		return NULL;
-	}
-
-	// Reads to buf from fp which has 1*size data.
-	fread(buf, 1, size, fp);
-	
-	// Null-terminate the string
-	buf[size] = '\0';
-	fclose(fp);
-
-	return buf;
-}
-
-// Inits the GL program. Reads, compiles and links the shaders.
+// Initiates the gl program. Reads, compiles and links the shaders.
 GLuint initProgram(const char* vShaderFile, const char* fShaderFile)
 {
-	GLuint program;
+	// Creates a new openGL program and returns a reference.
+	GLuint program = glCreateProgram();
 
-	// Fill an array of shaders structs with data
+	// Initiates two shader structs with data.
 	Shader shaders[2] = {
-		{ vShaderFile, GL_VERTEX_SHADER, NULL,0 },
-		{ fShaderFile, GL_FRAGMENT_SHADER, NULL,0 }
-	};
-	
-	// Creates an openGL program which can be refferenced
-	program = glCreateProgram();
+		{vShaderFile, GL_VERTEX_SHADER, NULL, 0},
+		{fShaderFile, GL_FRAGMENT_SHADER, NULL, 0}
+		};
 
-	// In this loop we read, copy and compile the shader files onto the saders
-	// which we link to the program.
-	for(int i = 0; i<2; i++)
+	// Read and compile the two shaders.
+	for(int i=0; i<2; i++ )
 	{
 		Shader* s = &shaders[i];
 
-		// Read the shader-file and copy its contents onto the struct
-		s->source = readShaderSource( s->filename );
-		if( s->source == NULL )
-		{
+		s->source = readShaderSource(s->filename);
+		if( s->source == NULL){
 			fprintf(stderr, "Failed to read %s\n", s->filename);
 			exit( EXIT_FAILURE );
 		}
-
-		// Create a shader object of specified type
+		
+		// Create a new shader
 		GLuint shader = glCreateShader( s->type );
-		// Copies the source-code in the provided shader file. 
-		// The second arguments tells how many rows there are in the GLchar**
-		// The third argument gives an array of code to be loaded into the shader.
-		// The fourth argument spcifies an array of shader lengths.
-		// Note: The source code is copied so we can free the memory on our end after this. (well do it later)
-		glShaderSource(shader, 1, (const GLchar**) &s->source, NULL );
+		// Copy the source code to the newly created shader object.
+		glShaderSource(shader, 1, (const GLchar**) &s->source, NULL  );
+		delete s->source;
+		// Comile the shader.
 		glCompileShader( shader );
-		free(s->source);
 
-		// See if everything went a-ok and print the error log if not.
+		// See that the compiling whent okay
 		GLint compiled;
+		// Get compilation status
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
 		if( !compiled )
 		{
-			char* logMsg;
-			GLint logSize;
-			
-			fprintf(stderr, "Failed to compile %s\n", s->filename);
-			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logSize);
-			errno = 0;
-			logMsg = (char*)malloc(logSize*sizeof(char*));
-			if(logMsg == NULL)
-			{
-				fprintf(stderr, "Malloc failed to allocate memory for comilation error message.");
-				if(errno!=0)
-				{
-					fprintf(stderr, " with errno message:\n %s", strerror(errno));
-				}
-				fprintf(stderr, "\n");
-			}
-			glGetShaderInfoLog(shader, logSize, NULL, logMsg);
-			fprintf(stderr, "%s\n", logMsg);
-			free(logMsg);
+			fprintf(stderr, "failed to compile %s\n", s->filename);
 
-			exit( EXIT_FAILURE );
+			char* logmsg;
+			GLint logsize;
+
+			glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &logsize );
+			logmsg = new char[logsize];
+			if(logmsg == NULL){
+				perror("initprogram in gltools.cpp failed:");
+			}
+
+			glGetShaderInfoLog(shader, logsize, NULL, logmsg);
+			fprintf(stderr, "%s\n", logmsg);
+			delete logmsg;
+
+			exit( EXIT_FAILURE  );
 		}
 
-		// Lastly we attach the shader to the program
+		// Attatch the shader to the program
 		glAttachShader(program, shader);
-		shaders[i].s = shader;
+		shaders[i].id = shader;
 	}
 
-	// Link the program (to what? the state? what does that mean?)
-	glLinkProgram(program);
-	
-	// Check that the program loaded okay, or print any error messages.
+	// Link the program object to the program
+	glLinkProgram( program );
+	// After the program is linked the shaders can be deleted without affecting
+	// the program.
+	glDeleteShader(shaders[0].id);
+	glDeleteShader(shaders[0].id);
+
+
+	// Check that the program object linked okay.
 	GLint linked;
 	glGetProgramiv(program, GL_LINK_STATUS, &linked);
 	if( !linked )
 	{
-		char* logMsg;
-		GLint logSize;
-		
-		fprintf(stderr, "Shader program failed to link.\n");
+		fprintf(stderr, "Shader program failed to link.\n");		
 
-		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logSize);
-		errno = 0;
-		logMsg = (char*)malloc(logSize*sizeof(char*));
-		if(logMsg == NULL)
-		{
-			fprintf(stderr, "Malloc failed to allocate memory for comilation error message.");
-			if(errno!=0)
-			{
-				fprintf(stderr, " with errno message:\n %s", strerror(errno));
-			}
-			fprintf(stderr, "\n");
+		char* logmsg;
+		GLint logsize;
+
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &logsize );
+		logmsg = new char[logsize];
+		if(logmsg == NULL){
+			perror("initprogram in gltools.cpp failed:");
 		}
-		glGetProgramInfoLog(program, logSize, NULL, logMsg);
-		fprintf(stderr, "%s\n", logMsg);
- 		free(logMsg);
-		exit( EXIT_FAILURE );
+
+		glGetProgramInfoLog(program, logsize, NULL, logmsg);
+		fprintf(stderr, "%s\n", logmsg);
+		delete logmsg;
+
+		exit( EXIT_FAILURE  );
+	}
+	return program;
+}
+
+// Reads the content of a .glsl shader file and stores it in an allocated char array.
+char* readShaderSource(const char* shaderFile)
+{
+	// open the file for reading
+	FILE* fp = NULL; 
+	char* buf = NULL;
+	long size = 0;
+
+	fp = fopen(shaderFile, "r");
+	if( fp == NULL ){
+		perror("readshadersource in gltools.cpp failed");
+		return NULL;
 	}
 
-	glDeleteShader(shaders[0].s);
-	glDeleteShader(shaders[1].s);	
+	// set the filepointer to eof
+	fseek(fp, 0l, SEEK_END);
+	// get the size in bytes of the file
+	size = ftell(fp);
 
-	return program;
+	// returns the fp to the beginning of the file
+	fseek(fp, 0l, SEEK_SET);
+	// allocate memory for the file
+	buf = new char[size+1];
+	if(buf == NULL){
+		perror("readshadersource in gltools.cpp failed");
+		return NULL;
+	}
+
+	// reads to buf from fp and nullterminate the string.
+	fread(buf, 1, size, fp);
+	buf[size] = '\0';
+
+	fclose(fp);
+
+	return buf;
 }

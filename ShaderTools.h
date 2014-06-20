@@ -1,29 +1,19 @@
-// Works on both OSX and CS
+#ifndef SHADERTOOLS_CPP
+#define SHADERTOOLS_CPP
 
-#ifndef SHADERTOOLS_H
-#define SHADERTOOLS_H
+#include <stdio.h>
+#include <stdlib.h>
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <errno.h>
+GLuint initProgram(const char* vShaderFile, const char* fShaderFile);
+char* readShaderSource(const char* shaderFile);
 
-// GL,GLEW, FreeGLUT, GLFW headers
-//#include <GL/glew.h>
-
-//#ifdef CS
-//#include <GL/freeglut.h>
-//#include <GL/freeglut_ext.h>
-
-struct Shader
-{
-	const char* filename; 	// contains the filename of the shader.
-	GLenum type;			// Tells us what type of shader it contains.
-	GLchar* source;			// Contains the source code
-	GLuint s;
+struct Shader{
+	const char* filename;
+	GLenum type;
+	GLchar* source;
+	GLuint id;
 };
 
-char* readShaderSource(const char* shaderFile);
-extern GLuint initProgram(const char* vShaderFile, const char* fShaderFile);
-
-#endif // SHADERTOOLS_H
+#endif //SHADERTOOLS_CPP
