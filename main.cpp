@@ -1,22 +1,24 @@
 #include <iostream>
 #include "ShaderTools.h"
-//#include <glm/glm.hpp>
+#include "MainWindow.h"
+//#include <glm/glmp>
 GLFWwindow* initGLFW();
 bool initGL();
 
-
 int main(int argc, const char *argv[])
 {
+	MainWindow window = MainWindow();
 
-	GLFWwindow* window = NULL;
-	if( (window = initGLFW()) == NULL ){
+	if(window.isZombie()){
+		std::cout<<"Main Window is a zombie."<<std::endl;
 		exit(EXIT_FAILURE);
 	}
 
 	if( !initGL() ){
+		std::cout<<"GL failed to initiate"<<std::endl;
 		exit(EXIT_FAILURE);
 	}
-	
+
 	std::cout<<"All is ok."<<std::endl;
 
 	return 0;
@@ -45,29 +47,4 @@ bool initGL()
 	glDepthMask(GL_TRUE);
 	
 	return true;
-}
-
-GLFWwindow* initGLFW()
-{
-	GLFWwindow* window = NULL;
-
-	if( !glfwInit() ){
-		return NULL;
-	}
-
-	glfwWindowHint(GLFW_SAMPLES, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);	
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);	
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);	
-
-	window = glfwCreateWindow(640, 480, "Compilation Test", NULL, NULL);
-
-	if(window == NULL){
-		glfwTerminate();
-		return NULL;
-	}
-
-	glfwMakeContextCurrent(window);
-
-	return window;
 }
