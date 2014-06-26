@@ -5,8 +5,15 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
 #include "Timer.h"
+
+struct Rect
+{
+	int x;
+	int y;
+	int w;
+	int h;
+};
 
 class MainWindow
 {	
@@ -24,6 +31,8 @@ class MainWindow
 		void update();
 		void draw();
 
+		Rect getWindowDim();
+		void setWindowDim(Rect r);
 	private:
 
 		// Fields

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include "ShaderTools.h"
 #include "MainWindow.h"
 //#include <glm/glmp>
@@ -18,12 +19,17 @@ int main(int argc, const char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
+	Rect r = window.getWindowDim();
+	printf("Window dim at start: %d, %d, %d, %d \n", r.x, r.y, r.w, r.h);
 	while( window.isRunning() )
 	{
 		window.getInput();
 		window.update();
 		window.draw();
 	}
+	
+	r = window.getWindowDim();
+	printf("Window dim at exit: %d, %d, %d, %d \n", r.x, r.y, r.w, r.h);
 
 	std::cout<<"All is ok."<<std::endl;
 

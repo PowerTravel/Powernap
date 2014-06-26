@@ -111,8 +111,27 @@ void MainWindow::draw()
 		}
 	}
 
-
 	frameCounter ++;
 	glfwSwapBuffers(window);
 }
 
+Rect MainWindow::getWindowDim()
+{
+	Rect r;
+	glfwGetWindowPos( window, &r.x, &r.y );
+	glfwGetWindowSize( window, &r.w, &r.h );
+	return r;
+}
+
+void MainWindow::setWindowDim(Rect nr)
+{
+	// If any of the parameters are invalid we set them to the current value
+	Rect r = getWindowDim();
+	if( nr.x<0 ){ nr.x = r.x; }
+	if( nr.y<0 ){ nr.y = r.y; }
+	if( nr.w<=0 ){ nr.w = r.w; }
+	if( nr.h<=0){ nr.h = r.h; }
+
+	glfwSetWindowSize(window, nr.w, nr.h);
+	glfwSetWindowPos(window, nr.x, nr.y);
+}
