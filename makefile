@@ -56,10 +56,13 @@ OFLAGS = $(INCLUDEFLAGS) $(WFLAGS) -std=c++11
 TARGETFLAGS = $(LINKFLAGS)
 
 # Buld Target
-all: $(TARGET)
+all: $(TARGET) clean
 # Remove Target, *.o and *.d files
-clean:
-	rm -f $(TARGET) $(OBJS) $(DEPS)
+clean:	
+	rm -f $(OBJS) $(DEPS) $(TARGET)
+
+tidy:
+	rm -f $(OBJS) $(DEPS)
 
 # Clean up and rebuild from scratch
 rebuild: clean all
