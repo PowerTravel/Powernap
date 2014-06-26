@@ -8,7 +8,7 @@ bool initGL();
 int main(int argc, const char *argv[])
 {
 	MainWindow window = MainWindow();
-
+	
 	if(window.isZombie()){
 		std::cout<<"Main Window is a zombie."<<std::endl;
 		exit(EXIT_FAILURE);
@@ -17,6 +17,13 @@ int main(int argc, const char *argv[])
 	if( !initGL() ){
 		std::cout<<"GL failed to initiate"<<std::endl;
 		exit(EXIT_FAILURE);
+	}
+
+	while( window.isRunning() )
+	{
+		window.getInput();
+		window.update();
+		window.draw();
 	}
 
 	std::cout<<"All is ok."<<std::endl;

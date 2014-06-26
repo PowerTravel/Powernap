@@ -16,6 +16,11 @@ class MainWindow
 
 		// Public members
 		bool isZombie();
+		bool isRunning();
+
+		void getInput();
+		void update();
+		void draw();
 
 	private:
 
@@ -27,6 +32,7 @@ class MainWindow
 		int bpp;
 		std::string title;
 		bool zombie;
+		bool running;
 
 		// Initiates glfw and creates a window.
 		bool initGLFW();

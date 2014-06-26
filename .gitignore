@@ -3,7 +3,8 @@
 *.lo
 *.o
 *.obj
-*.g
+*.g # what is this ??
+*.d
 
 # Compiled Dynamic libraries
 *.so

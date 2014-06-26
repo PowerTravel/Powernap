@@ -4,6 +4,7 @@ MainWindow::MainWindow()
 {
 	window = NULL;
 	zombie = true;
+	running = false;
 	width = 640;
 	height = 480;
 	bpp = 32;
@@ -12,6 +13,7 @@ MainWindow::MainWindow()
 	if( initGLFW() )
 	{
 		zombie = false;
+		running = true;
 	}
 }
 
@@ -50,3 +52,22 @@ bool MainWindow::isZombie()
 	return zombie;
 }
 
+bool MainWindow::isRunning()
+{
+	return running;
+}
+
+void MainWindow::getInput()
+{
+	glfwPollEvents();
+}
+
+void MainWindow::update()
+{
+	running = !glfwWindowShouldClose(window);
+}
+
+void MainWindow::draw()
+{
+	glfwSwapBuffers(window);
+}
