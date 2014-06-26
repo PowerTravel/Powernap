@@ -8,7 +8,6 @@ bool initGL();
 int main(int argc, const char *argv[])
 {
 	MainWindow window = MainWindow();
-	
 	if(window.isZombie()){
 		std::cout<<"Main Window is a zombie."<<std::endl;
 		exit(EXIT_FAILURE);
@@ -42,8 +41,6 @@ bool initGL()
 	GLuint program = initProgram("vshader.glsl","fshader.glsl");
 
 	glUseProgram(program);
-
-	//initiateGLSLVariables(&program);
 
 	glLineWidth(1.0);
 	glPointSize(1.0);

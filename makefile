@@ -18,7 +18,7 @@ CXX = g++ -g
 TARGET = main.out
 TESTTARGET = test.out
 C_WFLAGS = -Wall -Wsign-compare 
-C_OBJS = main.o MainWindow.o  ShaderTools.o
+C_OBJS = main.o MainWindow.o  ShaderTools.o Timer.o
 
 # == System Specific flags == #
 # Objs 		are to be named the same as the source-files except for .o - extention
