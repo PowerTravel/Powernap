@@ -44,7 +44,7 @@ bool initGL()
 		return false;
 	}
 
-	GLuint program = initProgram("vshader.glsl","fshader.glsl");
+	GLuint program = initProgram("shaders/vshader.glsl","shaders/fshader.glsl");
 
 	glUseProgram(program);
 
