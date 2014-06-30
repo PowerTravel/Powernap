@@ -1,5 +1,5 @@
 # Valid workstations are "OSX" and "UNIX"
-WORKSTATION = UNIX
+WORKSTATION = OSX
 
 
 # COMPILED WITH:
@@ -42,7 +42,7 @@ ifeq ($(WORKSTATION),OSX)
 OBJS = $(C_OBJS)
 WFLAGS = $(C_WFLAGS)
 INCLUDEFLAGS = -I/opt/local/include 
-LINKFLAGS = -L/opt/local/lib -framework OpenGL -framework cocoa -framework IOKit -lglfw3 -lGLEW
+LINKFLAGS = -framework OpenGL -framework cocoa -framework IOKit -lglfw3 -lGLEW
 endif
 
 #=== Execution ===#
