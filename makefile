@@ -2,8 +2,8 @@
 WORKSTATION = UNIX
 
 
-# COMPILED WITH:
-#g++ GLFW_test.o -o main.exec -lglfw3 -lGLU -lGL -lX11 -lXxf86vm -lXrandr -lpthread -lXi  -lXrandr -lXcursor -lXfixes
+# POSSIBLE UNIX LINKS FLAGS:
+# -lglfw3 -lGLU -lGL -lX11 -lXxf86vm -lXrandr -lpthread -lXi  -lXrandr -lXcursor -lXfixes
 
 
 
@@ -56,10 +56,10 @@ OFLAGS = $(INCLUDEFLAGS) $(WFLAGS) -std=c++11
 TARGETFLAGS = $(LINKFLAGS)
 
 # Buld Target
-all: $(TARGET) clean
+all: $(TARGET) 
 # Remove Target, *.o and *.d files
 clean:	
-	rm -f $(OBJS) $(DEPS) $(TARGET)
+	rm -f $(OBJS) $(DEPS) $(TARGET) *.gch
 
 tidy:
 	rm -f $(OBJS) $(DEPS)
@@ -78,9 +78,18 @@ $(TARGET):  $(OBJS)
 # Include dependencies
 -include $(DEPS)
 
+
 ### TEST PROGRAMS ###
-hvectest:
-	$(CXX) -std=c++11 hvectest.cpp Hvec.cpp -o test.out
+
+#	Testobjs for the different test files:
+# Hvec: Hvec.cpp hvectest.cpp
+
+TESTTARGET = test.out
+TESTOBJ = Hvec.cpp hvectest.cpp
+TESTHEAD = Hvec.h
+
+test:
+	$(CXX) -std=c++11 -g $(TESTOBJ) -o $(TESTTARGET)
 	
-
-
+cleantest:
+	rm -f $(TESTTARGET)
