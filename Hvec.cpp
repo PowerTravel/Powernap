@@ -53,7 +53,7 @@ const float& Hvec::operator[](int idx) const
 	return v[idx];
 }
 
-Hvec Hvec::operator+(Hvec& v1, Hvec& v2)
+Hvec operator+(Hvec& v1, Hvec& v2)
 {
 	float x,y,z,w;
 	x=v1[0]+v2[0];
@@ -72,7 +72,7 @@ Hvec& Hvec::operator+=( Hvec& hv )
 	return *this;
 }
 
-Hvec Hvec::operator-(Hvec& v1, Hvec& v2)
+Hvec operator-(Hvec& v1, Hvec& v2)
 {
 	float x,y,z,w;
 	x=v1[0]-v2[0];
@@ -91,13 +91,13 @@ Hvec& Hvec::operator-=( Hvec& hv )
 	return *this;
 }
 
-Hvec Hvec::operator*( Hvec& hv )
+Hvec operator*( Hvec& v1, Hvec& v2 )
 {
 	float x,y,z,w;
-	x = v[0] * hv[0];	
-	y = v[1] * hv[1];
-	z = v[2] * hv[2];
-	w = v[3] * hv[3];
+	x = v1[0] * v2[0];	
+	y = v1[1] * v2[1];
+	z = v1[2] * v2[2];
+	w = v1[3] * v2[3];
 	return Hvec(x,y,z,w);
 }
 
@@ -130,7 +130,7 @@ bool Hvec::operator!=( Hvec& hv )
 	}
 }
 
-Hvec::Hvec operator*(float& f, Hvec& hv)
+Hvec operator*(float& f, Hvec& hv)
 {
 	float x,y,z,w;
 	x = f*hv.v[0];
@@ -140,7 +140,7 @@ Hvec::Hvec operator*(float& f, Hvec& hv)
 	return Hvec(x,y,z,w);
 }
 
-Hvec::Hvec operator*(Hvec& v, float f)
+Hvec operator*(Hvec& v, float f)
 {
 	float x,y,z,w;
 	x = f*hv.v[0];

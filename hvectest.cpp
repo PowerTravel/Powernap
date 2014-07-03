@@ -4,7 +4,7 @@
 using namespace std;
 
 bool testSubscript();
-bool testEquality()
+bool testEquality();
 bool testAdd();
 bool testSub();
 bool testMult();
@@ -35,7 +35,7 @@ int	main(int argc, const char* argv[])
 }
 
 
-bool testSubscript();
+bool testSubscript()
 {
 	Hvec v1 = Hvec(1.0, 2.0, 3.0, 4.0);
 	Hvec v2 = v1;

@@ -78,3 +78,9 @@ $(TARGET):  $(OBJS)
 # Include dependencies
 -include $(DEPS)
 
+### TEST PROGRAMS ###
+hvectest:
+	$(CXX) -std=c++11 hvectest.cpp Hvec.cpp -o test.out
+	
+
+
