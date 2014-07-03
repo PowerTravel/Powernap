@@ -1,5 +1,5 @@
 # Valid workstations are "OSX" and "UNIX"
-WORKSTATION = OSX
+WORKSTATION = UNIX
 
 
 # COMPILED WITH:
@@ -56,7 +56,7 @@ OFLAGS = $(INCLUDEFLAGS) $(WFLAGS) -std=c++11
 TARGETFLAGS = $(LINKFLAGS)
 
 # Buld Target
-all: $(TARGET) clean
+all: $(TARGET) tidy
 # Remove Target, *.o and *.d files
 clean:	
 	rm -f $(OBJS) $(DEPS) $(TARGET)
