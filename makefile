@@ -81,12 +81,9 @@ $(TARGET):  $(OBJS)
 
 ### TEST PROGRAMS ###
 
-#	Testobjs for the different test files:
-# Hvec: Hvec.cpp hvectest.cpp
-
 TESTTARGET = test.out
-TESTOBJ = Hvec.cpp hvectest.cpp
-TESTHEAD = Hvec.h
+#TESTOBJ = Hvec.cpp hvectest.cpp # Hvec
+TESTOBJ = Hmat.cpp Hvec.cpp hmattest.cpp  # Hmat
 
 test:
 	$(CXX) -std=c++11 -g $(TESTOBJ) -o $(TESTTARGET)

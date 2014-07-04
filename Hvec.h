@@ -11,9 +11,6 @@ class Hvec
 	
 	// Dot Product
 	friend float operator*(Hvec v1, Hvec v2);
-	// Vector Matrix multiplication
-	//friend Hvec operator*(Hvec& v, Hmat& m); // Not tested Should be moved to Hmat
-	//friend Hvec operator*(Hmat& m, Hvec& v); // Not tested Should be moved to Hmat 
 
 	// Vector Element arithmatic	
 	friend Hvec operator+(Hvec& v1, Hvec& v2);
@@ -24,16 +21,15 @@ class Hvec
 	
 
 	public:
-
-		#ifndef ENUMTYPE
-		#define ENUMTYPE
+		#ifndef NORMTYPE
+		#define NORMTYPE
 		enum NormType{
 			L0,
 			L1,
 			L2,
 			INF
 		};
-		#endif // ENUMTYPE
+		#endif // NORMTYPE 
 
 		Hvec();
 		Hvec(float x, float y=0.0, float z=0.0, float w=0.0);

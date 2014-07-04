@@ -52,29 +52,7 @@ float operator*( Hvec v1, Hvec v2 )
 	w = v1.v[3] * v2.v[3];
 	return x+y+z+w;
 }
-/*
-// Vector matrix multiplicaion
-Hvec operator*(Hvec& hv, Hmat& hm)
-{
-	float x, y, z, w;
-	x = hv*hm.col(0);
-	y = hv*hm.col(1);
-	z = hv*hm.col(2);
-	w = hv*hm.col(3);
-	return Hvec(x,y,z,w);
-}
 
-// Matrix vector multiplication
-Hvec operator*(Hmat& hm, Hvec& hv)
-{
-	float x,y,z,w;
-	x = hv*hm.row(0);
-	y = hv*hm.row(1);
-	z = hv*hm.row(2);
-	w = hv*hm.row(3);
-	return Hvec(x,y,z,w);
-}
-*/
 // vector adition
 Hvec operator+(Hvec& v1, Hvec& v2)
 {
