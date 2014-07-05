@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "Hmat.h"
 using namespace std;
 
@@ -10,6 +11,7 @@ bool testVecMult();
 bool testScalMult();
 bool testTranspose();
 bool testRowCol();
+bool testNorm();
 bool testInv();
 
 int main()
@@ -55,10 +57,16 @@ int main()
 		return 8;
 	}
 
-	if( !testInv() )
+	if( !testNorm() )
 	{
 		cout << "Failed 9" << endl;
 		return 9;
+	}
+
+	if( !testInv() )
+	{
+		cout << "Failed 10" << endl;
+		return 10;
 	}
 
 	cout << "Test went ok" << endl;
@@ -105,7 +113,7 @@ bool testEquality()
 	r3 = Hvec(9,10,11,12);
 	r4 = Hvec(13,14,15,16);
 	Hmat ref = Hmat(r1,r2,r3,r4);
-	Hnat m = ref;
+	Hmat m = ref;
 
 	if(m != ref)
 	{
@@ -139,7 +147,7 @@ bool testEquality()
 bool testAdd()
 {
 	float f1[16] = {1,2,3,4,   5,6,7,8,   9,10,11,12,   13,14,15,16};
-	float f2[16] = {3,2,3,4,   5,7,7,8,   9,10,12,12,   13,14,15,17};
+	float f2[16] = {2,2,3,4,   5,7,7,8,   9,10,12,12,   13,14,15,17};
 	Hmat m1 = Hmat();
 	Hmat m2 = Hmat(f1);
 	Hmat ans = Hmat(f2);
@@ -147,7 +155,7 @@ bool testAdd()
 	Hmat m3 = m1+m2;
 	m1 += m2;
 
-	if( (m1 != ans) || (m2 != ans)  )
+	if( (m1 != ans) || (m3 != ans)  )
 	{
 		return false;
 	}
@@ -158,7 +166,7 @@ bool testAdd()
 bool testSub()
 {
 	float f1[16] = {1,2,3,4,   5,6,7,8,   9,10,11,12,   13,14,15,16};
-	float f2[16] = {0,2,3,4,   5,5,7,8,   9,10,10,12,   13,14,15,15};
+	float f2[16] = {0,-2,-3,-4,   -5,-5,-7,-8,   -9,-10,-10,-12,   -13,-14,-15,-15};
 	
 	Hmat m1 = Hmat();
 	Hmat m2 = Hmat(f1);
@@ -167,7 +175,7 @@ bool testSub()
 	Hmat m3 = m1-m2;
 	m1 -= m2;
 
-	if( (m1 != ans) || (m2 != ans)  )
+	if( (m1 != ans) || (m3 != ans)  )
 	{
 		return false;
 	}
@@ -177,23 +185,26 @@ bool testSub()
 
 bool testVecMult()
 {
-	float f1[16] = {-10,8,-8,5,   6,4,1,-4,   8,-1,6,4,   8,4,-2,-2};	
+	float f1[16] = {-10,8,-8,5,   6,4,1,-4,   8,-1,6,4,   8,4,-2,-2};
 	float f2[16] = {-8,3,5,10,   3,2,-8,10,   -7,2,5,-9,   0,8,2,10};
-	float f3[16] = {160, 10,-8,5,   -43, -4, -5, 51,  -109, 66, 86, 56,   -38, 12, -6, 118};
+	float f3[16] = {160, 10,-144,102,   -43, -4, -5, 51,  -109, 66, 86, 56,   -38, 12, -6, 118};
 
-	Hmat m() = Hmat();
-	Hmat m1 = Hmat(f1);
-	Hmat ans1 = Hmat(f1);
-	Hmat m2 = Hmat(f2);
-	Hmat ans2 = Hmat(ansf);
+	Hmat m0m1 = Hmat();
+	Hmat m0m2 = Hmat(f1);
+	Hmat m0Prod = m0m1*m0m2;
+	Hmat m0Agg = m0m1;
+	m0Agg *= m0m2;
+	Hmat m0Ans = Hmat(f1);
 
-	Hmat mRes1 = m * m1;
-	m *= m1;
 
-	Hmat mRes2 = m1 * m2;
-	m1 *= m2;
+	Hmat m1m1 = Hmat(f1);
+	Hmat m1m2 = Hmat(f2);
+	Hmat m1Prod = m1m1*m1m2;
+	Hmat m1Agg = m1m1;
+	m1Agg *= m1m2;
+	Hmat m1Ans = Hmat(f3);
 
-	if( (m != MRes1) || (mRes1 != ans1) || (m1 != Mres2) || (mRes2 != ans2)  )
+	if( (m0Prod != m0Ans) || (m0Agg != m0Ans) || (m1Prod != m1Ans) || (m1Agg != m1Ans)  )
 	{
 		return false;
 	}
@@ -211,11 +222,10 @@ bool testScalMult()
 	Hmat m = Hmat(f);
 	Hmat ans = Hmat(ansf);
 	
-	Hmat result1 = m * f;
-	Hmat result2 = f * m;
+	Hmat result1 = m * scal;
+	Hmat result2 = scal * m;
 	Hmat result3 = m;
-	result3 *= m;
-	
+	result3 *= scal;
 
 	if( (result1 != ans) || (result2 != ans) || (result3 != ans) )
 	{
@@ -230,10 +240,15 @@ bool testTranspose()
 	float f[16] = {-1,0,2,4,   1,2,3,4,   -1,-2,-3,-4,   4,3,2,0};	
 	float ft[16] = {-1,1,-1,4,  0,2,-2,3,  2,3,-3,2,  4,4,-4,0};
 
-	Hmat m = Hmat(f);
-	Hmat mt = Hmat(ft);
+	Hmat m1 = Hmat(f);
+	Hmat m1t;
 
-	if( ( m != mt.T() ) || (mt != m.t() ) )
+	Hmat m2 = Hmat(ft);
+	Hmat m2t;
+
+	// For some reason the operator cant take the return of m.T().
+	//if( ( m != mt.T() ) || (mt != m.t() ) )
+	if( ( m1 != (m2t=m2.T()) ) || (m2 != (m1t=m1.T()) ) )
 	{
 		return false;
 	}
@@ -259,8 +274,41 @@ bool testRowCol()
 
 }
 
+bool testNorm()
+{
+	float f[16] = {-10,8,-8,5,   6,4,1,-4,   8,-1,6,4,   8,4,-2,-2};
+	Hmat m = Hmat(f);
+	float normP1 = 32;
+	float normINF = 31;
+
+	if( (m.norm(Hmat::P1) != normP1) || (m.norm(Hmat::INF) != normINF) )
+	{	
+		return false;	
+	}
+
+	return true;
+}
+
 bool testInv()
 {
+	float f[16] = {1,0,0,1,  1,1,1,4,  -3,2,1,4,  0,1,3,3};
+	Hmat m=Hmat(f);
+	float finv[16] = {-9,5,-2,-1,  -36,18,-6,-4,  1,-1,0,1,  11,-5,2,1};
+	for (int i = 0; i < 16; i++) {
+		finv[i] = finv[i]/2.0;
+	}
+	Hmat mAns = Hmat(finv);
 
+	Hmat mInv = m.inv();
 
+	float diffP1 = abs(mAns.norm(Hmat::P1) - mInv.norm(Hmat::P1));
+	float diffINF = abs(mAns.norm(Hmat::INF) - mInv.norm(Hmat::INF));
+	float tol = 0.00001;
+	
+	if( (diffP1 > tol) || (diffINF > tol) )
+	{
+		return false;
+	}
+
+	return true;
 }

@@ -117,7 +117,7 @@ const float& Hvec::operator[](int idx) const
 }
 
 // Equal to
-bool Hvec::operator==( Hvec& hv )
+bool Hvec::operator==( const Hvec& hv )
 {
 	if( (v[0]==hv[0]) && (v[1]==hv[1]) && (v[2]==hv[2]) && (v[3]==hv[3]) )
 	{
@@ -127,8 +127,9 @@ bool Hvec::operator==( Hvec& hv )
 	}
 }
 
+
 // Not equal to
-bool Hvec::operator!=( Hvec& hv )
+bool Hvec::operator!=( const Hvec& hv )
 {
 	if( (v[0]!=hv[0]) || (v[1]!=hv[1]) || (v[2]!=hv[2]) || (v[3]!=hv[3]) )
 	{
@@ -137,6 +138,7 @@ bool Hvec::operator!=( Hvec& hv )
 		return false;
 	}
 }
+
 
 // L0, L1, L2 and INF norm
 float Hvec::norm(NormType type)

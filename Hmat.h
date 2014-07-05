@@ -6,7 +6,9 @@
 
 class Hmat
 {
-	friend std::ostream& operator<<(std::ostream& os, Hmat& hm);
+
+	friend std::istream& operator>>(std::istream& is, Hmat& hm);
+	friend std::ostream& operator<<(std::ostream& os,const Hmat& hm);
 
 	// Matrix-Matrix Adition, Subtraction and multiplication;	
 	friend Hmat operator+(Hmat& h1, Hmat& h2);
@@ -20,16 +22,29 @@ class Hmat
 	// Scalar-Matrix multiplication
 	friend Hmat operator*(float& f, Hmat& hm);
 	friend Hmat operator*(Hmat& hm, float& f);
+
 	public:
-		Hmat();
+		enum NormFlag
+		{
+			P1,
+			INF,
+		};
+		enum TypeFlag
+		{
+			IDENTITY,
+			ZERO
+		};
+
+
+		Hmat(TypeFlag = IDENTITY);
 		Hmat(float mat[]);
 		Hmat(Hvec r0, Hvec r1, Hvec r2, Hvec r3);
 		virtual ~Hmat();
 
 		Hvec& operator[](int idx);
 		const Hvec& operator[](int idx) const;
-		bool operator==(hmat& hm);	
-		bool operator!=(hmat& hm);
+		bool operator==(const Hmat& hm);	
+		bool operator!=(const Hmat& hm);
 
 		// Matrix-Matrix aggregate Adition, Subtraction and multiplication;
 		Hmat& operator+=(Hmat& hm);
@@ -37,12 +52,14 @@ class Hmat
 		Hmat& operator*=(Hmat& hm);
 
 		// Scalar-Matrix aggregate multiplication
-		Hmat& operator*=(float f);
+		Hmat& operator*=(float& f);
 
-		Hvec T(); 			// Get a transposed matrix
+		float getVal(int idx); // Get a value using single int, row oriented
+		Hmat T(); 			// Get a transposed matrix
 		Hvec row(int idx);	// Get a row vector
 		Hvec col(int idx);	// Get a column vector 
-		Hvec inv(); // Not implemented, returns inverse; Should return null matrix on failure
+		float norm(NormFlag type=INF);
+		Hmat inv(); // Not implemented, returns inverse; Should return null matrix on failure
 	private:
 		std::vector<Hvec> m;
 };

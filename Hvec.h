@@ -21,15 +21,12 @@ class Hvec
 	
 
 	public:
-		#ifndef NORMTYPE
-		#define NORMTYPE
 		enum NormType{
 			L0,
 			L1,
 			L2,
 			INF
 		};
-		#endif // NORMTYPE 
 
 		Hvec();
 		Hvec(float x, float y=0.0, float z=0.0, float w=0.0);
@@ -40,8 +37,8 @@ class Hvec
 		const float& operator[](int idx) const;
 		
 		// Logic operators
-		bool operator==( Hvec& hv );
-		bool operator!=( Hvec& hv );
+		bool operator==(const Hvec& hv );
+		bool operator!=(const Hvec& hv );
 
 		// L0, L1, L2 and INF norm
 		float norm(NormType type = L2);
