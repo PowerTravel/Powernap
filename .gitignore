@@ -24,3 +24,7 @@
 
 # Backup Files
 *.swp
+
+# OSX related
+*.tmproj
+*.DS_Store

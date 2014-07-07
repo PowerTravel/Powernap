@@ -58,6 +58,7 @@ std::ostream& operator<<(std::ostream& os,const Hmat& hm)
 	os << hm.m[1] << "\n";
 	os << hm.m[2] << "\n";
 	os << hm.m[3];
+	return os;
 }
 
 Hmat operator+(Hmat& m1, Hmat& m2)
@@ -166,19 +167,13 @@ bool Hmat::operator!=(const Hmat& hm)
 
 Hmat& Hmat::operator+=(Hmat& hm)
 {
-	for(int i = 0; i < 4; i++) 
-	{
-		m[i] += hm.m[i];
-	}
+	*this = *this + hm;
 	return *this;
 }
 
 Hmat& Hmat::operator-=(Hmat& hm)
 {
-	for(int i = 0; i < 4; i++) 
-	{
-		m[i] -= hm.m[i];
-	}
+	*this = *this - hm;
 	return *this;
 }
 

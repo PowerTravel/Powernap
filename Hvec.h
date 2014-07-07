@@ -5,7 +5,7 @@
 // Homogeneous vector
 class Hvec
 {
-	// External Overloads
+	// Input  /  Output streams
 	friend std::istream& operator>>(std::istream& is, Hvec& hv);
 	friend std::ostream& operator<<(std::ostream& os, const Hvec& hv);
 	
@@ -21,6 +21,7 @@ class Hvec
 	
 
 	public:
+		// Flags for what type of norm should be calculated.
 		enum NormType{
 			L0,
 			L1,
@@ -28,15 +29,16 @@ class Hvec
 			INF
 		};
 
+		// Constructor / Destructor
 		Hvec();
 		Hvec(float x, float y=0.0, float z=0.0, float w=0.0);
 		virtual ~Hvec();
 
-		// Internal overloads
+		// Subscript
 		float& operator[](int idx);
 		const float& operator[](int idx) const;
 		
-		// Logic operators
+		// Equality
 		bool operator==(const Hvec& hv );
 		bool operator!=(const Hvec& hv );
 
@@ -54,5 +56,5 @@ class Hvec
 		float v[4];
 };
 
-#endif // HOMOGENEOUSVECTOR_H
+#endif // HVEC_H
 

@@ -1,5 +1,5 @@
 # Valid workstations are "OSX" and "UNIX"
-WORKSTATION = UNIX
+WORKSTATION = OSX
 
 
 # POSSIBLE UNIX LINKS FLAGS:
@@ -82,8 +82,8 @@ $(TARGET):  $(OBJS)
 ### TEST PROGRAMS ###
 
 TESTTARGET = test.out
-#TESTOBJ = Hvec.cpp hvectest.cpp # Hvec
-TESTOBJ = Hmat.cpp Hvec.cpp hmattest.cpp  # Hmat
+TESTOBJ = Hvec.cpp hvectest.cpp # Hvec
+#TESTOBJ = Hmat.cpp Hvec.cpp hmattest.cpp  # Hmat
 
 test:
 	$(CXX) -std=c++11 -g $(TESTOBJ) -o $(TESTTARGET)

@@ -6,7 +6,7 @@
 
 class Hmat
 {
-
+	// Input  /  Output streams
 	friend std::istream& operator>>(std::istream& is, Hmat& hm);
 	friend std::ostream& operator<<(std::ostream& os,const Hmat& hm);
 
@@ -24,25 +24,29 @@ class Hmat
 	friend Hmat operator*(Hmat& hm, float& f);
 
 	public:
+		// What type of norm one wants.
 		enum NormFlag
 		{
 			P1,
 			INF,
 		};
+		// How the matrix should be initialized upon creation.
 		enum TypeFlag
 		{
 			IDENTITY,
 			ZERO
 		};
 
-
+		// Constructor / Destructors
 		Hmat(TypeFlag = IDENTITY);
 		Hmat(float mat[]);
 		Hmat(Hvec r0, Hvec r1, Hvec r2, Hvec r3);
 		virtual ~Hmat();
 
+		// Subscript
 		Hvec& operator[](int idx);
 		const Hvec& operator[](int idx) const;
+		// Equality
 		bool operator==(const Hmat& hm);	
 		bool operator!=(const Hmat& hm);
 

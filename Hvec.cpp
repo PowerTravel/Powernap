@@ -46,7 +46,7 @@ std::ostream& operator<<(std::ostream& os, const Hvec& hv)
 float operator*( Hvec v1, Hvec v2 )
 {
 	float x,y,z,w;
-	x = v1.v[0] * v2.v[0];	
+	x = v1.v[0] * v2.v[0];
 	y = v1.v[1] * v2.v[1];
 	z = v1.v[2] * v2.v[2];
 	w = v1.v[3] * v2.v[3];
@@ -90,12 +90,7 @@ Hvec operator*(float& f, Hvec& hv)
 // Scalar-Vector Multiplication
 Hvec operator*(Hvec& hv, float f)
 {
-	float x,y,z,w;
-	x = f*hv.v[0];
-	y = f*hv.v[1];
-	z = f*hv.v[2];
-	w = f*hv.v[3];
-	return Hvec(x,y,z,w);
+	return f*hv;
 }
 
 // Subscript
@@ -131,12 +126,7 @@ bool Hvec::operator==( const Hvec& hv )
 // Not equal to
 bool Hvec::operator!=( const Hvec& hv )
 {
-	if( (v[0]!=hv[0]) || (v[1]!=hv[1]) || (v[2]!=hv[2]) || (v[3]!=hv[3]) )
-	{
-		return true;
-	}else{
-		return false;
-	}
+	return !( *this == hv );
 }
 
 
@@ -175,7 +165,8 @@ float Hvec::norm(NormType type)
 			for(int i=1; i<4; i++)
 			{	
 				float val2 = abs(v[i]);
-				if(val1 < val2){
+				if(val1 < val2)
+				{
 					val1 = val2;
 				}
 			}
@@ -195,20 +186,14 @@ float Hvec::norm(NormType type)
 // Compound vector Adition
 Hvec& Hvec::operator+=( Hvec& hv )
 {	
-	v[0] += hv.v[0];
-	v[1] += hv.v[1];
-	v[2] += hv.v[2];
-	v[3] += hv.v[3];
+	*this = *this + hv;
 	return *this;
 }
 
 // Compound Vector subtraction
 Hvec& Hvec::operator-=( Hvec& hv )
 {
-	v[0] -= hv.v[0];
-	v[1] -= hv.v[1];
-	v[2] -= hv.v[2];
-	v[3] -= hv.v[3];
+	*this = *this - hv;
 	return *this;
 }
 
@@ -216,10 +201,7 @@ Hvec& Hvec::operator-=( Hvec& hv )
 // Compound scalar vector multiplication
 Hvec& Hvec::operator*=( float& f )
 {
-	v[0] *= f;
-	v[1] *= f;
-	v[2] *= f;
-	v[3] *= f;
+	*this = *this * f;
 	return *this;
 }
 

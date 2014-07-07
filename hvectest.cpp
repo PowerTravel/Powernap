@@ -39,7 +39,7 @@ int	main(int argc, const char* argv[])
 		cout << "Failed 5" << endl;
 		return 5;
 	}
-	if( !testScalMult )
+	if( !testScalMult() )
 	{
 		cout << "Failed 6" << endl;
 		return 6;
