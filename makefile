@@ -18,7 +18,7 @@ CXX = g++ -g
 TARGET = main.out
 TESTTARGET = test.out
 C_WFLAGS = -Wall -Wsign-compare 
-C_OBJS = main.o MainWindow.o  ShaderTools.o Timer.o ObjectDataManager.o
+C_OBJS = main.o MainWindow.o  ShaderTools.o Timer.o
 
 # == System Specific flags == #
 # Objs 		are to be named the same as the source-files except for .o - extention
@@ -84,8 +84,8 @@ $(TARGET):  $(OBJS)
 ### TEST PROGRAMS ###
 
 TESTTARGET = test.out
-TESTOBJ = Hvec.cpp hvectest.cpp # Hvec
-#TESTOBJ = Hmat.cpp Hvec.cpp hmattest.cpp  # Hmat
+#TESTOBJ = Hvec.cpp hvectest.cpp # Hvec
+TESTOBJ = Hmat.cpp Hvec.cpp hmattest.cpp  # Hmat
 
 test:
 	$(CXX) -std=c++11 -g $(TESTOBJ) -o $(TESTTARGET)
