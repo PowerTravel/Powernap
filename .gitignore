@@ -4,7 +4,7 @@
 *.o
 *.obj
 *.d
-
+*.gch # gdb debug files
 # Compiled Dynamic libraries
 *.so
 *.dylib
@@ -24,3 +24,8 @@
 
 # Backup Files
 *.swp
+
+# OSX related
+*.tmproj
+*.DS_Store
+*.dSYM

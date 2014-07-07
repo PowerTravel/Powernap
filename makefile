@@ -1,9 +1,9 @@
 # Valid workstations are "OSX" and "UNIX"
-WORKSTATION = UNIX
+WORKSTATION = OSX
 
 
-# COMPILED WITH:
-#g++ GLFW_test.o -o main.exec -lglfw3 -lGLU -lGL -lX11 -lXxf86vm -lXrandr -lpthread -lXi  -lXrandr -lXcursor -lXfixes
+# POSSIBLE UNIX LINKS FLAGS:
+# -lglfw3 -lGLU -lGL -lX11 -lXxf86vm -lXrandr -lpthread -lXi  -lXrandr -lXcursor -lXfixes
 
 
 
@@ -18,7 +18,7 @@ CXX = g++ -g
 TARGET = main.out
 TESTTARGET = test.out
 C_WFLAGS = -Wall -Wsign-compare 
-C_OBJS = main.o MainWindow.o  ShaderTools.o Timer.o
+C_OBJS = main.o MainWindow.o  ShaderTools.o Timer.o ObjectDataManager.o
 
 # == System Specific flags == #
 # Objs 		are to be named the same as the source-files except for .o - extention
@@ -33,7 +33,7 @@ WFLAGS = $(C_WFLAGS)
 #INCLUDEFLAGS = `pkg-config --cflags gtk+-2.0`
 #LINKFLAGS = -export-dynamic -lm -lXext -lX11 `pkg-config --libs gtk+-2.0` -lGL -lGLEW -lGLU -lglut
 INCLUDEFLAGS =
-LINKFLAGS = -export-dynamic -lglfw3 -lGLU -lGL -lGLEW -lX11 -lpthread -lXi -lXrandr -lXcursor -lXxf86vm 
+LINKFLAGS = -export-dynamic -lglfw3 -lGLU -lGL -lGLEW -lX11 -lpthread -lXi -lXrandr -lXcursor -lXxf86vm -lassimp
 
 endif
 
@@ -42,7 +42,8 @@ ifeq ($(WORKSTATION),OSX)
 OBJS = $(C_OBJS)
 WFLAGS = $(C_WFLAGS)
 INCLUDEFLAGS = -I/opt/local/include 
-LINKFLAGS = -framework OpenGL -framework cocoa -framework IOKit -lglfw3 -lGLEW
+LINKFLAGS = -framework OpenGL -framework cocoa -framework IOKit -lglfw3 -lGLEW -lassimp
+
 endif
 
 #=== Execution ===#
@@ -56,10 +57,11 @@ OFLAGS = $(INCLUDEFLAGS) $(WFLAGS) -std=c++11
 TARGETFLAGS = $(LINKFLAGS)
 
 # Buld Target
-all: $(TARGET) tidy
+all: $(TARGET) 
+
 # Remove Target, *.o and *.d files
 clean:	
-	rm -f $(OBJS) $(DEPS) $(TARGET)
+	rm -f $(OBJS) $(DEPS) $(TARGET) *.gch
 
 tidy:
 	rm -f $(OBJS) $(DEPS)
@@ -78,3 +80,15 @@ $(TARGET):  $(OBJS)
 # Include dependencies
 -include $(DEPS)
 
+
+### TEST PROGRAMS ###
+
+TESTTARGET = test.out
+TESTOBJ = Hvec.cpp hvectest.cpp # Hvec
+#TESTOBJ = Hmat.cpp Hvec.cpp hmattest.cpp  # Hmat
+
+test:
+	$(CXX) -std=c++11 -g $(TESTOBJ) -o $(TESTTARGET)
+	
+cleantest:
+	rm -f $(TESTTARGET)
