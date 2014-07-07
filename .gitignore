@@ -28,3 +28,4 @@
 # OSX related
 *.tmproj
 *.DS_Store
+*.dSYM

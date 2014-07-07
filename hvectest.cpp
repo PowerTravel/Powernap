@@ -54,7 +54,6 @@ int	main(int argc, const char* argv[])
 	return 0;
 }
 
-
 bool testSubscript()
 {
 	Hvec v1 = Hvec(1.0, 2.0, 3.0, 4.0);
