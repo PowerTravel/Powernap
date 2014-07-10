@@ -2,22 +2,55 @@
 #include <memory>
 #include "List.h"
 using namespace std;
+
+bool testCreate();
+bool testStore();
+bool testRemove();
+bool testNavigate();
+
 int main()
 {
-	List<int> l;
-	shared_ptr<int> i1 = shared_ptr<int>(new int());
-	l.insert(i1);
-	//l.remove();
-	cout << l.isEmpty()<<endl;
-	
-	shared_ptr<int> p = l.inspect();
-	cout <<  p.use_count() << endl;
-	cout <<  l.inspect().use_count()-1 << endl;
-	* p = 10;
-	cout << *l.inspect()<<endl;
-	p = NULL;
-	cout << *l.inspect()<<endl;
-	i1 = NULL;
-	cout <<  l.inspect().use_count()-1 << endl;
-	return 0;
+	if(!testCreate())
+	{
+		cerr << "Failed 1" << endl;
+		return 1;
+	}
+	if(!testStore())
+	{
+		cerr << "Failed 2" << endl;
+		return 1;
+	}
+	if(!testRemove())
+	{
+		cerr << "Failed 3" << endl;
+		return 1;
+	}
+	if(!testNavigate())
+	{
+		cerr << "Failed 4" << endl;
+		return 1;
+	}
 }
+bool testCreate()
+{
+	List<int> l = List<int>();
+	for(int i = 0; i<10; i++)
+	{
+		l.insert(i);
+		l.next();
+	}
+	l.first();
+	for(int i = 0; i<10; i++)
+	{
+		cout << l.inspect() <<  endl;
+		if(l.inspect()!=i)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+bool testStore(){return false;}
+bool testRemove(){return false;}
+bool testNavigate(){return false;}

@@ -19,21 +19,21 @@ class List{
 		bool isStart();	// Check if list is pointing at end
 		bool isEnd();	// Check if list is pointing at start
 
-		void insert(std::shared_ptr<T> data); // Insert data.
+		void insert(T data); // Insert data.
 		void remove();
 
 		// Retrieve data in the current position.
-		std::shared_ptr<T> inspect();
+		T inspect();
 
 	private:
-	
+
 		struct node
 		{
 			std::shared_ptr<node> prev;
 			std::shared_ptr<node> next;
-			std::shared_ptr<T> data;
+			T data;
 		};
-		
+
 		std::shared_ptr<node> head; // First element, always empty.
 		std::shared_ptr<node> tail; // Last element, always empty.
 		std::shared_ptr<node> n;	// Current node
@@ -143,7 +143,6 @@ void List<T>::remove()
 		n2->prev = n1;
 		dNode -> next = NULL;
 		dNode -> prev = NULL;
-		dNode -> data = NULL;
 	}
 }
 
@@ -155,7 +154,7 @@ void List<T>::setNodeConnections(std::shared_ptr<node> current, std::shared_ptr<
 }
 
 template<typename T>
-void List<T>::insert(std::shared_ptr<T> data) // Insert data.
+void List<T>::insert(T data) // Insert data.
 {
 	std::shared_ptr<node> newNode = std::shared_ptr<node>( new node );
 	newNode->data = data;
@@ -169,13 +168,13 @@ void List<T>::insert(std::shared_ptr<T> data) // Insert data.
 }
 
 template<typename T>
-std::shared_ptr<T> List<T>::inspect()
+T List<T>::inspect()
 {
 	if(!isEmpty() && !isEnd())
 	{
 		return n->next->data;
 	}else{
-		return NULL;
+		return T();
 	}
 }
 
