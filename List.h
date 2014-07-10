@@ -1,5 +1,6 @@
 #ifndef _LIST_H
 #define _LIST_H
+#include <iostream>
 #include <memory> // Shared pointers
 
 template<typename T>
@@ -14,16 +15,18 @@ class List{
 		void end();		// Set the list to point at the last element.
 		void next();	// Set the list to point at the next element.
 		void prev();	// Set the list to point at the previous element.
-		bool isEmpty();	// Check if the list is empty.
+		bool isEmpty();	// Check if the list is empty
+		bool isStart();	// Check if list is pointing at end
+		bool isEnd();	// Check if list is pointing at start
 
 		void insert(std::shared_ptr<T> data); // Insert data.
 		void remove();
 
 		// Retrieve data in the current position.
-		std::weak_ptr<T> inspect();
+		std::shared_ptr<T> inspect();
 
 	private:
-		
+	
 		struct node
 		{
 			std::shared_ptr<node> prev;
@@ -33,7 +36,7 @@ class List{
 		
 		std::shared_ptr<node> head; // First element, always empty.
 		std::shared_ptr<node> tail; // Last element, always empty.
-		std::weak_ptr<node> n;	// Current node
+		std::shared_ptr<node> n;	// Current node
 		
 		void setNodeConnections(std::shared_ptr<node> current, std::shared_ptr<node> prev, std::shared_ptr<node> next);
 };
@@ -45,8 +48,8 @@ List<T>::List()
 	tail = std::shared_ptr<node>(new node);
 	n = head;
 	
-	initNodeConnection(head, NULL, tail);
-	initNodeConnection(tail, head, NULL);
+	setNodeConnections(head, NULL, tail);
+	setNodeConnections(tail, head, NULL);
 }
 
 template <typename T> 
@@ -63,14 +66,14 @@ List<T>::~List()
 template <typename T> 
 void List<T>::first()
 {
-	n = head->next;
+	n = head;
 }
 
 // Set the list to point at the last element.
 template <typename T> 
 void List<T>::end()
 {
-	n = tail;
+	n = tail->prev;
 }
 
 // Set the list to point at the next element.
@@ -78,7 +81,7 @@ void List<T>::end()
 template <typename T> 
 void List<T>::next()
 {
-	if( n -> next -> next != NULL )
+	if( !isEnd() )
 	{
 		n = n->next;
 	}
@@ -89,7 +92,7 @@ void List<T>::next()
 template <typename T> 
 void List<T>::prev()
 {
-	if( n ->prev != NULL )
+	if( !isStart() )
 	{
 		n = n->prev;
 	}
@@ -99,7 +102,29 @@ void List<T>::prev()
 template <typename T> 
 bool List<T>::isEmpty()
 {
-	if(head->next == NULL)
+	if( head->next == tail )
+	{
+		return true;
+	}
+	return false;
+}
+
+// Check if list is pointing at start
+template <typename T> 
+bool List<T>::isStart()
+{
+	if( (n == head) || isEmpty() )
+	{
+		return true;
+	}
+	return false;
+}
+
+// Check if list is pointing at end
+template <typename T> 
+bool List<T>::isEnd()
+{
+	if( (n->next == tail) || isEmpty() )
 	{
 		return true;
 	}
@@ -109,7 +134,7 @@ bool List<T>::isEmpty()
 template <typename T> 
 void List<T>::remove()
 {
-	if( !isEmpty() )
+	if( !isEmpty() && !isEnd() )
 	{
 		std::shared_ptr<node> n1 = n;
 		std::shared_ptr<node> dNode = n->next;
@@ -118,6 +143,7 @@ void List<T>::remove()
 		n2->prev = n1;
 		dNode -> next = NULL;
 		dNode -> prev = NULL;
+		dNode -> data = NULL;
 	}
 }
 
@@ -125,28 +151,32 @@ template <typename T>
 void List<T>::setNodeConnections(std::shared_ptr<node> current, std::shared_ptr<node> prev, std::shared_ptr<node> next)
 {
 	current->prev = prev;
-	next->next = next;
+	current->next = next;
 }
 
 template<typename T>
 void List<T>::insert(std::shared_ptr<T> data) // Insert data.
 {
-	std::shared_ptr< node > temp_n = n.lock();
-	std::shared_ptr<T> newNode = std::shared_ptr<T>( new node );
+	std::shared_ptr<node> newNode = std::shared_ptr<node>( new node );
 	newNode->data = data;
+
+	std::shared_ptr< node > prevNode = n;
+	std::shared_ptr< node > nextNode = n->next;
 	
-	std::shared_ptr< node > prev = temp_n->next;
-	std::shared_ptr< node > next = next->next;
-	
-	setNodeConnections( newNode, prev, next );
-	setNodeConnections( next, newNode, next->next );
-	setNodeConnections( prev, newNode, prev->prev );
+	setNodeConnections( newNode, prevNode, nextNode );
+	setNodeConnections( nextNode, newNode, nextNode->next );
+	setNodeConnections( prevNode, prevNode->prev, newNode );
 }
 
 template<typename T>
-std::weak_ptr<T> List<T>::inspect()
+std::shared_ptr<T> List<T>::inspect()
 {
-	if(!isEmpty()) return n->next->data;
+	if(!isEmpty() && !isEnd())
+	{
+		return n->next->data;
+	}else{
+		return NULL;
+	}
 }
 
 #endif // _LIST_H
