@@ -3,6 +3,12 @@
 #include <iostream>
 #include <memory> // Shared pointers
 
+
+// CHANGE TO WORK LIKE THIS:
+// The  n-pointer always point to an active element unless the list is empty, this means that data can always be retrieved as long as the list is not empty.
+// To insert element one has to give an argument to insert either before the marker or after it.
+// To remove, the elements one the elements are removed behind the marker. Like using the 'x' button in vim.
+
 template<typename T>
 class List{
 
@@ -60,6 +66,12 @@ List<T>::~List()
 	{
 		remove();
 	}
+	head->next = NULL;
+	head = NULL;
+	tail->prev = NULL;
+	n->next = NULL;
+	n->prev = NULL;
+	n = NULL;
 }
 
 // Set the list to point at the first element.
@@ -134,15 +146,21 @@ bool List<T>::isEnd()
 template <typename T> 
 void List<T>::remove()
 {
-	if( !isEmpty() && !isEnd() )
+	if(!isEmpty())
 	{
+		if( isEnd() )
+		{
+			prev();	
+		}
 		std::shared_ptr<node> n1 = n;
 		std::shared_ptr<node> dNode = n->next;
 		std::shared_ptr<node> n2 = n->next->next;
+
 		n1->next = n2;
 		n2->prev = n1;
 		dNode -> next = NULL;
 		dNode -> prev = NULL;
+		dNode = NULL;
 	}
 }
 
@@ -170,11 +188,11 @@ void List<T>::insert(T data) // Insert data.
 template<typename T>
 T List<T>::inspect()
 {
-	if(!isEmpty() && !isEnd())
+	if(!isEmpty() && !isEnd() )
 	{
 		return n->next->data;
 	}else{
-		return T();
+		// THROW AN EXCEPTION
 	}
 }
 
