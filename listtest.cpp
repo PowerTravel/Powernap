@@ -1,131 +1,196 @@
 #include <iostream>
 #include <memory>
-#include "List.h"
+#include "DList.h"
 using namespace std;
 
-bool testCreate();
-bool testStore_intPtr();
+bool testCreateIsEmpty();
+bool testStore();
+bool testStorePtr();
 bool testRemove();
 bool testNavigate();
-
+bool testRemoveAddInTheMiddle();
 int main()
 {
-	if(!testCreate())
+	if(!testCreateIsEmpty())
 	{
 		cerr << "Failed 1" << endl;
-		return 1;
+		return 1;	
 	}
-	if(!testStore_intPtr())
+	cout << "1 Ok"<< endl;
+
+	if(!testCreateIsEmpty())
 	{
 		cerr << "Failed 2" << endl;
-		return 1;
+		return 2;	
 	}
-	if(!testRemove())
+	cout << "2 Ok"<< endl;
+
+	if(!testStore())
 	{
 		cerr << "Failed 3" << endl;
-		return 1;
+		return 3;
 	}
-	if(!testNavigate())
+	cout << "3 Ok"<< endl;
+	
+	if(!testRemove())
 	{
 		cerr << "Failed 4" << endl;
-		return 1;
+		return 4;
 	}
+	cout << "4 Ok"<< endl;
+
+	if(!testNavigate())
+	{
+		cerr << "Failed 5" << endl;
+		return 5;
+	}
+	cout << "5 Ok "<< endl;
+	if(!testRemoveAddInTheMiddle())
+	{
+		cerr << "Failed 6" << endl;
+		return 6;
+	}
+	cout << "6 Ok "<< endl;
 }
-bool testCreate()
+
+bool testCreateIsEmpty()
 {
-	List<int> l = List<int>();
-	for(int i = 0; i<1000; i++)
+	DList<int> l = DList<int>();
+	if(!l.isEmpty()){return false;}
+	if(l.len()!=0){return false;}
+	return true;
+}
+
+bool testStore()
+{
+	DList<int> l = DList<int>();
+	
+	int count  = 10;
+	for(int i = 0; i<count; i++){
+		if( l.len()!= i){return false;}
+		l.insert(i);
+		if( l.len()!= i+1){return false;}
+		int nr = *l.inspect().lock();
+		if( nr != i) return false;
+	}
+	
+	return true;
+}
+
+bool testStorePtr()
+{
+	DList<int> l = DList<int>();
+	
+	int count  = 10;
+	for(int i = 0; i<count; i++){
+		if( l.len()!= i){return false;}
+		std::shared_ptr<int> iptr = std::shared_ptr<int>(new int);
+		*iptr = i;
+		l.insert(iptr);
+		if( l.len()!= i+1){return false;}
+		int nr = *l.inspect().lock();
+		if( nr != i) return false;
+	}
+	
+	return true;
+}
+
+bool testRemove()
+{
+	DList<int> l = DList<int>();
+	int count  = 10;
+	for(int i = 0; i<count; i++){
+		l.insert(i);
+		int nr = *l.inspect().lock();
+		if( nr != i) return false;
+	}
+
+	for(int i = 0; i<count; i++){
+		int nr = *l.inspect().lock();
+		if( nr!=count-1-i) return false;
+		l.remove();
+	}	
+
+	if(!l.isEmpty()) return false;
+
+	return true;
+}
+
+bool testNavigate()
+{
+	DList<int> l = DList<int>();
+	int count  = 10;
+	for(int i = 0; i<count; i++){
+		l.insert(i);
+		int nr = *l.inspect().lock();
+		if( nr != i) return false;
+		if( l.len()!=i+1 )	return false;
+		l.next();
+	}
+
+	l.first();
+	int num = 0;
+	while(!l.isEnd())
+	{
+		int i= *l.inspect().lock();
+		if(i!=num) return false;
+		if(l.pos() != num) return false;
+		l.next();
+		num++;
+	}
+
+	return true;
+}
+
+bool testRemoveAddInTheMiddle()
+{
+	DList<int> l = DList<int>();
+	int count  = 30;  //Must be 3*int
+	for(int i = 0; i<count; i++){
+		l.insert(i);
+		l.next();
+	}
+
+	l.first();
+	for(int i = 0; i<count/3; i++)
+	{
+		l.next();	
+	} 
+
+	for(int i = 0; i<count/3; i++)
+	{
+		l.remove();
+		if(l.pos()!=count/3) return false;
+	}
+
+	if(l.len() != (2*count/3) ) return false;
+
+	for(int i = 10*count+count/3; i<10*count+2*count/3; i++)
 	{
 		l.insert(i);
 		l.next();
 	}
+	
+	if(l.len() != count ) return false;
+
 	l.first();
-	for(int i = 0; i<1000; i++)
-	{
-		if(l.inspect()!=i) return false;
+	int j = count /3;
+	int k = 2*j;
+	for(int i = 0; i<count; i++){
+		int num = *l.inspect().lock();
+		
+		if( (i>=0 && i<j) || (i>=k && i<count) )
+		{
+			if(num != i) return false;	
+		}
+
+		if(i>=j && i<k)
+		{
+			if(num != 10*count+i) return false;
+		}
+
 		l.next();
 	}
-
-	l.first();
-	
-	int i = 0;
-	while(!l.isEmpty())
-	{
-		l.remove();
-		i++;
-		if (i>1000) return false;
-	}
-
 	return true;
 }
 
-bool testStore_intPtr()
-{
-	// Create a list
-	List<std::shared_ptr<int> > l = List<std::shared_ptr<int> >();
-	// insert 1000 ordered ints. Uing next means we always adds the new element last like.
-	for(int i = 0; i<1000; i++)
-	{
-		std::shared_ptr<int> nr = std::shared_ptr<int>(new int);
-		*nr = i;
-		l.insert(nr);
-		l.next();
-	}
-
-	// reset the list to first and make sure the first 500 elements are what they should be
-	l.first();
-	for(int i = 0; i<500; i++)
-	{	
-		if(*l.inspect()!=i) return false;
-		l.next();
-	}
-	
-	// set the list to last and work backwards making sure the list contain what it should
-	l.end();
-	l.prev();
-	cout << *l.inspect() << endl;
-	for(int i = 999; i>499; i--)
-	{	
-		if(*l.inspect()!=i) return false;
-		l.prev();
-	}
-
-	std::cout << "leol" << endl;
-	// Remove the last 500 elements
-	for(int i = 0; i<500; i++)
-	{
-		l.remove();
-	}
-
-	// insert 500 new ones not using next each time. This adds elements at the 500th position.
-	for(int i = 999; i>500; i--)
-	{
-		std::shared_ptr<int> nr = std::shared_ptr<int>(new int);
-		*nr = i;
-		l.insert(nr);
-	}
-	// check that thee added elements are correct and delete them
-	int i = 500;
-	int j = 499;
-	int k = 0;
-	while(!l.isEmpty())
-	{
-		if(k<500)
-		{
-			if(*l.inspect()!=i) return false;
-			i++;
-		}
-		if((k>500) && (k<1000))
-		{
-			if(*l.inspect()!=j) return false;
-			j--;
-		}
-		if (k>1000) return false;
-		l.remove();
-		k++;
-	}
-	if (i != 500) return false;
-	return true;
-}
-bool testRemove(){return false;}
-bool testNavigate(){return false;}
