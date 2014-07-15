@@ -57,7 +57,6 @@ bool testCreateIsEmpty()
 {
 	DList<int> l = DList<int>();
 	if(!l.isEmpty()){return false;}
-	if(l.len()!=0){return false;}
 	return true;
 }
 
@@ -67,9 +66,7 @@ bool testStore()
 	
 	int count  = 10;
 	for(int i = 0; i<count; i++){
-		if( l.len()!= i){return false;}
 		l.insert(i);
-		if( l.len()!= i+1){return false;}
 		int nr = *l.inspect().lock();
 		if( nr != i) return false;
 	}
@@ -83,11 +80,9 @@ bool testStorePtr()
 	
 	int count  = 10;
 	for(int i = 0; i<count; i++){
-		if( l.len()!= i){return false;}
 		std::shared_ptr<int> iptr = std::shared_ptr<int>(new int);
 		*iptr = i;
 		l.insert(iptr);
-		if( l.len()!= i+1){return false;}
 		int nr = *l.inspect().lock();
 		if( nr != i) return false;
 	}
@@ -124,7 +119,6 @@ bool testNavigate()
 		l.insert(i);
 		int nr = *l.inspect().lock();
 		if( nr != i) return false;
-		if( l.len()!=i+1 )	return false;
 		l.next();
 	}
 
@@ -134,7 +128,6 @@ bool testNavigate()
 	{
 		int i= *l.inspect().lock();
 		if(i!=num) return false;
-		if(l.pos() != num) return false;
 		l.next();
 		num++;
 	}
@@ -160,10 +153,7 @@ bool testRemoveAddInTheMiddle()
 	for(int i = 0; i<count/3; i++)
 	{
 		l.remove();
-		if(l.pos()!=count/3) return false;
 	}
-
-	if(l.len() != (2*count/3) ) return false;
 
 	for(int i = 10*count+count/3; i<10*count+2*count/3; i++)
 	{
@@ -171,8 +161,6 @@ bool testRemoveAddInTheMiddle()
 		l.next();
 	}
 	
-	if(l.len() != count ) return false;
-
 	l.first();
 	int j = count /3;
 	int k = 2*j;
