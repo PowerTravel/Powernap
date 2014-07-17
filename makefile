@@ -86,7 +86,8 @@ $(TARGET):  $(OBJS)
 TESTTARGET = test.out
 #TESTOBJ = Hvec.cpp hvectest.cpp # Hvec
 #TESTOBJ = Hmat.cpp Hvec.cpp hmattest.cpp  # Hmat
-TESTOBJ = listtest.cpp
+#TESTOBJ = listtest.cpp
+TESTOBJ = pqueuetest.cpp
 test:
 	$(CXX) -std=c++11 -g $(TESTOBJ) -o $(TESTTARGET)
 	
