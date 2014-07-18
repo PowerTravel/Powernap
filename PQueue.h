@@ -8,29 +8,24 @@
 template <typename T>
 class PQueue{
 	public:
-		PQueue();			
+		PQueue();
 		virtual ~PQueue();
-		
-		void push( T data, int p);					
+
+		void push( T data, int p);
 		void push(std::shared_ptr<T> data, int p);
-		bool isEmpty();					
-		std::shared_ptr<T> pop();	
-		std::weak_ptr<T> peak();	
+		bool isEmpty();
+		std::shared_ptr<T> pop();
+		std::weak_ptr<T> peak();
 
 	private:
-		enum PQ_Flag{
-			STAY,
-			LEFT,
-			RIGHT
-		};
-		
+
 		struct node{
 			std::shared_ptr<T> data;
 			int p; // priority
 		};
 
 		std::vector< std::shared_ptr<node> > v;
-		
+
 		void swim();
 		bool tryToSwim(int pos, int next);
 		void sink();
@@ -39,8 +34,6 @@ class PQueue{
 		int getLeftChildIdx(int n);
 		int getRightChildIdx(int n);
 		int getParentIdx(int n);
-		
-		
 };
 
 template <typename T>
@@ -52,7 +45,7 @@ PQueue<T>::PQueue()
 template <typename T>
 PQueue<T>::~PQueue()
 {
-
+	
 }
 
 template <typename T>
@@ -65,7 +58,7 @@ bool PQueue<T>::isEmpty()
 template <typename T>
 std::weak_ptr<T> PQueue<T>::peak()
 {
-	return v.front();
+	return v.front()->data;
 }
 
 template <typename T>
@@ -73,8 +66,8 @@ void PQueue<T>::push( T data, int p)
 {
 	// Construct the new node
 	std::shared_ptr<node> new_node = std::shared_ptr<node>(new node);
-	std::shared_ptr<T> new_data = std::shared_ptr<T>(new T);
-	new_node->data = new_data;
+	new_node->data = std::shared_ptr<T>(new T);
+	*new_node->data = data;
 	new_node->p = p;
 
 	v.push_back(new_node);
@@ -89,7 +82,7 @@ void PQueue<T>::push(std::shared_ptr<T> data, int p)
 	// Construct the new node
 	std::shared_ptr<node> new_node = std::shared_ptr<node>(new node);
 	new_node->data = data;
-	new_node->p = p;
+	new_node->p = p;	
 	
 	v.push_back(new_node);
 	
@@ -102,13 +95,12 @@ std::shared_ptr<T> PQueue<T>::pop()
 {
 	// Swap the last leaf with root and shrink the tree
 	std::shared_ptr<T> return_data = v.front()->data;
-	std::cout << "From pop: " << *v.front()-> data << std::endl;
 	v.front() = v.back();
 	v.pop_back();
-	
+
 	// sinks the top node down to correct priority.
 	sink();
-	
+
 	// Return the removed top node.
 	return return_data;
 }
@@ -120,9 +112,9 @@ void PQueue<T>::swim()
 
 	// This swaps pos with next if priority of pos is greater than next
 	while( pos > 0 ){
-		
+
 		int next = getParentIdx(pos);
-		
+
 		if( tryToSwim(pos, next) )
 		{
 			swap(pos, next);
@@ -136,7 +128,7 @@ void PQueue<T>::swim()
 template <typename T>
 bool PQueue<T>::tryToSwim(int pos, int next)
 {
-	if( next > 0 )
+	if( next >= 0 )
 	{
 		int priodiff = v.at(pos)->p - v.at(next)->p;
 		if( priodiff > 0 ){
@@ -178,7 +170,6 @@ void PQueue<T>::sink()
 		}
 	}
 }
-
 
 template <typename T>
 int PQueue<T>::getSinkDirection(int pos, int left, int right)
@@ -235,7 +226,7 @@ int PQueue<T>::getRightChildIdx(int n)
 template <typename T>
 int PQueue<T>::getParentIdx(int n)
 {
-	return floor(n/2-1);
+	return floor((n-1)/2);
 }
 
 
